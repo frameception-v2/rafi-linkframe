@@ -15,7 +15,7 @@ Here's a focused 20-task checklist following the implementation sequence:
 - [x] Build LinkList component with conditional pinned/recent rendering
 - [x] Implement CSS Grid/Flexbox hybrid layout in LinkList
 - [x] Add touch swipe detection with velocity threshold
-- [ ] Create semantic HTML structure with ARIA labels
+- [x] Create semantic HTML structure with ARIA labels
 
 **Interactions**
 - [ ] Develop unified touch/mouse event system in `/lib/input.ts`

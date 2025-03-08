@@ -7,6 +7,7 @@ import { Label } from "~/components/ui/label";
 interface LinkListProps {
   pinnedLinks: LinkData[];
   recentLinks: LinkData[];
+  'aria-labelledby'?: string;
 }
 
 export default function LinkList({ pinnedLinks, recentLinks }: LinkListProps) {
@@ -33,16 +34,19 @@ export default function LinkList({ pinnedLinks, recentLinks }: LinkListProps) {
   return (
     <div 
       className="grid gap-4 w-full"
+      role="list"
+      aria-labelledby="link-list-heading"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
+      <h2 id="link-list-heading" className="sr-only">Social links navigation</h2>
       {/* Pinned Links */}
       {pinnedLinks.length > 0 && (
         <div className="grid gap-2">
           <Label className="text-lg font-semibold">Pinned Links</Label>
           {pinnedLinks.map((link) => (
-            <Card key={link.url} className="p-4">
+            <Card key={link.url} className="p-4" role="listitem">
               <a href={link.url} className="flex items-center gap-2">
                 <span className="flex-1 truncate">{link.title}</span>
                 <span className="i-lucide-arrow-up-right text-primary/50" />
