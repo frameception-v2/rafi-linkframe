@@ -102,7 +102,12 @@ export default function Frame() {
       });
 
       console.log("Calling ready");
-      sdk.actions.ready({});
+      sdk.actions.ready({
+        frameImage: `${process.env.NEXT_PUBLIC_BASE_URL}/og.png`,
+        postUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/frame`,
+        buttons: [{ label: 'Get started' }],
+        state: { timestamp: Date.now() }
+      });
 
       // Set up a MIPD Store, and request Providers.
       const store = createStore();
@@ -134,11 +139,17 @@ export default function Frame() {
         paddingBottom: context?.client.safeAreaInsets?.bottom ?? 0,
         paddingLeft: context?.client.safeAreaInsets?.left ?? 0,
         paddingRight: context?.client.safeAreaInsets?.right ?? 0,
+        minHeight: '100vh',
+        display: 'grid',
+        gridTemplateRows: 'auto 1fr auto',
       }}
+      className="grid-cols-[minmax(0,1fr)] lg:grid-cols-[repeat(2,minmax(0,1fr))] gap-4 p-4"
     >
-      <div className="w-[300px] mx-auto py-2 px-2">
-        <ExampleCard />
-      </div>
+      <main className="grid gap-4 content-start w-full max-w-[100vw]">
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
+          <ExampleCard />
+        </div>
+      </main>
     </div>
   );
 }

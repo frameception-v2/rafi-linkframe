@@ -1,9 +1,9 @@
 Here's a focused 20-task checklist following the implementation sequence:
 
 **Foundation Setup**
-- [ ] Create `/app/frame/page.tsx` with responsive CSS Grid layout and viewport units
-- [ ] Initialize Farcaster Frame SDK v2.1 with basic frame metadata
-- [ ] Create LinkData interface and Context API provider skeleton
+- [x] Create `/app/frame/page.tsx` with responsive CSS Grid layout and viewport units
+- [x] Initialize Farcaster Frame SDK v2.1 with basic frame metadata
+- [x] Create LinkData interface and Context API provider skeleton
 
 **Data Layer**
 - [ ] Implement React Query hooks in `/lib/data.ts` with Zod validation
