@@ -25,7 +25,7 @@ Here's a focused 20-task checklist following the implementation sequence:
 
 **Storage Integration**
 - [x] Wire React Query cache to localStorage sync
-- [ ] Add IndexedDB cleanup scheduler for expired links
+- [x] Add IndexedDB cleanup scheduler for expired links
 - [ ] Implement sessionStorage rehydration on mount
 
 **Farcaster Integration**

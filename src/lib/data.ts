@@ -13,11 +13,52 @@ const linkSchema = z.object({
 // LocalStorage key constants
 const PINNED_LINKS_KEY = 'farcaster_links/pinned'
 
+// IndexedDB cleanup constants
+const CLEANUP_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours
+const EXPIRATION_DAYS = 30;
+
+async function performIDBCleanup() {
+  const expirationTime = Date.now() - (EXPIRATION_DAYS * 24 * 60 * 60 * 1000);
+  const request = indexedDB.open('linksDB', 1);
+  
+  return new Promise<void>((resolve, reject) => {
+    request.onsuccess = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+      const tx = db.transaction('recentLinks', 'readwrite');
+      const store = tx.objectStore('recentLinks');
+      const clearRequest = store.openCursor();
+      const linksToDelete: IDBValidKey[] = [];
+
+      clearRequest.onsuccess = (e) => {
+        const cursor = (e.target as IDBRequest).result;
+        if (cursor) {
+          const link = cursor.value;
+          if (link.timestamp < expirationTime && !link.pinned) {
+            linksToDelete.push(cursor.primaryKey);
+          }
+          cursor.continue();
+        } else {
+          linksToDelete.forEach(key => store.delete(key));
+          resolve();
+        }
+      };
+      clearRequest.onerror = () => reject(clearRequest.error);
+    };
+    request.onerror = () => reject(request.error);
+  });
+}
+
 // Fetch pinned links from localStorage
 async function fetchLinks(): Promise<{
   pinned: LinkData[]
   recent: LinkData[]
 }> {
+  // Initialize cleanup scheduler on first fetch
+  if (!(fetchLinks as any).cleanupScheduled) {
+    setInterval(performIDBCleanup, CLEANUP_INTERVAL);
+    (fetchLinks as any).cleanupScheduled = true;
+  }
+
   try {
     // Get from localStorage
     const pinnedData = localStorage.getItem(PINNED_LINKS_KEY) || '[]'
