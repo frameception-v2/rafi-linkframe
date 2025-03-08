@@ -21,7 +21,7 @@ Here's a focused 20-task checklist following the implementation sequence:
 - [x] Develop unified touch/mouse event system in `/lib/input.ts`
 - [x] Implement long-press detection for context menus
 - [x] Add keyboard navigation handlers in ViewManager
-- [ ] Create swipe progress indicators with CSS transforms
+- [x] Create swipe progress indicators with CSS transforms
 
 **Storage Integration**
 - [ ] Wire React Query cache to localStorage sync

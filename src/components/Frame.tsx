@@ -41,8 +41,11 @@ export default function Frame() {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
   const [context, setContext] = useState<FrameContext>();
   const [touchStart, setTouchStart] = useState({ x: 0, y: 0, time: 0 });
-  const [swipeDirection, setSwipeDirection] = useState<'left'|'right'|null>(null);
-  
+  const [swipeProgress, setSwipeProgress] = useState<{ direction: 'left'|'right'|null; progress: number }>({
+    direction: null,
+    progress: 0
+  });
+
   // View state management
   const [viewState, setViewState] = useState<ViewState>({
     currentView: 'main',
@@ -146,7 +149,18 @@ export default function Frame() {
         y: event.y,
         time: event.time
       });
-    } else if (event.type === 'end') {
+    } else if (event.type === 'move') {
+      const deltaX = event.x - touchStart.x;
+      const deltaY = event.y - touchStart.y;
+      
+      // Only track horizontal movement
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        const containerWidth = window.innerWidth - (context?.client.safeAreaInsets?.left ?? 0) - (context?.client.safeAreaInsets?.right ?? 0);
+        const progress = Math.min(Math.max(Math.abs(deltaX) / containerWidth, 0), 1);
+        const direction = deltaX > 0 ? 'right' : 'left';
+        setSwipeProgress({ direction, progress });
+      }
+    } else if (event.type === 'end' || event.type === 'cancel') {
       const deltaX = event.x - touchStart.x;
       const deltaY = event.y - touchStart.y;
       const timeDelta = event.time - touchStart.time;
@@ -156,9 +170,8 @@ export default function Frame() {
         const velocity = Math.abs(deltaX) / timeDelta;
         
         // Velocity threshold (0.5px/ms = 500px/s)
-        if (velocity > 0.5) {
+        if (velocity > 0.5 || swipeProgress.progress > 0.5) {
           const direction = deltaX > 0 ? 'right' : 'left';
-          setSwipeDirection(direction);
           
           // Update view state based on swipe direction
           setViewState(prev => ({
@@ -168,6 +181,8 @@ export default function Frame() {
           }));
         }
       }
+      // Reset progress after gesture ends
+      setSwipeProgress({ direction: null, progress: 0 });
     }
   }, [touchStart]);
 
@@ -195,7 +210,29 @@ export default function Frame() {
       className="p-[2vmin]"
       ref={setInputElement}
     >
-      <main className="flex flex-col gap-[2vmin] w-full">
+      <main 
+        className="flex flex-col gap-[2vmin] w-full relative overflow-hidden"
+        style={{
+          transform: swipeProgress.direction === 'left' 
+            ? `translateX(-${swipeProgress.progress * 20}%)`
+            : swipeProgress.direction === 'right'
+            ? `translateX(${swipeProgress.progress * 20}%)`
+            : undefined,
+          transition: swipeProgress.progress === 0 ? 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)' : 'none'
+        }}
+      >
+        {/* Swipe progress indicators */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-neutral-200">
+          <div 
+            className="h-full bg-purple-500 transition-all duration-150"
+            style={{
+              width: `${swipeProgress.progress * 100}%`,
+              transformOrigin: swipeProgress.direction === 'left' ? 'right' : 'left',
+              marginLeft: swipeProgress.direction === 'right' ? '0%' : 'auto',
+              marginRight: swipeProgress.direction === 'left' ? '0%' : 'auto'
+            }}
+          />
+        </div>
         <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-[2vmin]">
           <LinkList
             pinnedLinks={[]}
