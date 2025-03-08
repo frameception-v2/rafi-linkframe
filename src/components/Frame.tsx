@@ -1,10 +1,8 @@
 "use client";
 
 import { useEffect, useCallback, useState } from "react";
-import sdk, {
-  AddFrame,
-  type Context,
-} from "@farcaster/frame-sdk";
+import sdk from "@farcaster/frame-sdk";
+import type { FrameContext } from "@farcaster/frame-sdk";
 import {
   Card,
   CardHeader,
@@ -39,7 +37,7 @@ function ExampleCard() {
 
 export default function Frame() {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
-  const [context, setContext] = useState<Context.FrameContext>();
+  const [context, setContext] = useState<FrameContext>();
 
   const [added, setAdded] = useState(false);
 
@@ -49,12 +47,10 @@ export default function Frame() {
     try {
       await sdk.actions.addFrame();
     } catch (error) {
-      if (error instanceof AddFrame.RejectedByUser) {
-        setAddFrameResult(`Not added: ${error.message}`);
-      }
-
-      if (error instanceof AddFrame.InvalidDomainManifest) {
-        setAddFrameResult(`Not added: ${error.message}`);
+      if (error instanceof Error) {
+        setAddFrameResult(`Error: ${error.message}`);
+      } else {
+        setAddFrameResult(`Unknown error occurred`);
       }
 
       setAddFrameResult(`Error: ${error}`);
