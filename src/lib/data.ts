@@ -30,10 +30,20 @@ async function fetchLinks(): Promise<{
 }
 
 // React Query hooks
-export function useLinks() {
+export function usePinnedLinks() {
   return useQuery({
     queryKey: ['links'],
     queryFn: fetchLinks,
+    select: data => data.pinned,
+    staleTime: 1000 * 60 * 5 // 5 minutes
+  })
+}
+
+export function useRecentLinks() {
+  return useQuery({
+    queryKey: ['links'],
+    queryFn: fetchLinks, 
+    select: data => data.recent,
     staleTime: 1000 * 60 * 5 // 5 minutes
   })
 }
