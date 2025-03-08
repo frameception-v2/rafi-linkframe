@@ -11,7 +11,8 @@ import {
   CardContent,
 } from "~/components/ui/card";
 
-import { config } from "wagmi";
+import { config } from "~/components/providers/WagmiProvider";
+import type { LinkData } from "~/lib/constants";
 import { truncateAddress } from "~/lib/truncateAddress";
 import { base, optimism } from "wagmi/chains";
 import { useSession } from "next-auth/react";
@@ -52,8 +53,6 @@ export default function Frame() {
       } else {
         setAddFrameResult(`Unknown error occurred`);
       }
-
-      setAddFrameResult(`Error: ${error}`);
     }
   }, []);
 
