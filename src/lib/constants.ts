@@ -7,7 +7,7 @@ export interface LinkData {
 
 export type ViewState = {
   currentView: 'main' | 'recent' | 'detail'
-  previousView?: ViewState['currentView']
+  previousView?: 'main' | 'recent' | 'detail'
   transitionDirection?: 'forward' | 'back'
   lastInteraction: number
 };

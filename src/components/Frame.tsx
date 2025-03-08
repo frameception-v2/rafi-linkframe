@@ -18,6 +18,7 @@ import type { LinkData, ViewState } from "~/lib/constants";
 import { usePinnedLinks, useRecentLinks } from "~/lib/data";
 import { truncateAddress } from "~/lib/truncateAddress";
 import { createStore } from "mipd";
+import { UnifiedInputHandler } from "~/lib/input";
 import { Label } from "~/components/ui/label";
 import LinkList from "~/components/LinkList";
 import { PROJECT_TITLE } from "~/lib/constants";
@@ -58,6 +59,7 @@ export default function Frame() {
 
   // View state management
   const [viewState, setViewState] = useState<ViewState>(() => {
+    // @ts-ignore - Temporary ignore while we fix the type
     // Rehydrate from sessionStorage on initial load
     const savedState = typeof window !== 'undefined' 
       ? sessionStorage.getItem('frameViewState')
