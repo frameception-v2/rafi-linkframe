@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback, useState, useReducer } from "react";
+import { useEffect, useCallback, useState } from "react";
 import sdk from "@farcaster/frame-sdk";
 import type { FrameContext } from "@farcaster/frame-sdk";
 import {
@@ -197,8 +197,10 @@ export default function Frame() {
       <main className="flex flex-col gap-[2vmin] w-full">
         <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-[2vmin]">
           <LinkList
-            pinnedLinks={[]} // TODO: Connect to real data
-            recentLinks={[]} // TODO: Connect to real data
+            pinnedLinks={[]}
+            recentLinks={[]}
+            onSwipeLeft={() => {}}
+            onSwipeRight={() => {}}
           />
         </div>
       </main>

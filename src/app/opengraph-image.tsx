@@ -77,8 +77,8 @@ export default async function Image() {
     color: "white",
   };
 
-  /*
-this Image is rendered using vercel/satori.
+  {/*
+  This Image is rendered using vercel/satori.
 
 Satori supports a limited subset of HTML and CSS features, due to its special use cases. In general, only these static and visible elements and properties that are implemented.
 For example, the <input> HTML element, the cursor CSS property are not in consideration. And you can't use <style> tags or external resources via <link> or <script>.
