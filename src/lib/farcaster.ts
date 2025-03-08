@@ -1,5 +1,6 @@
 import { createConfig, http } from 'wagmi'
 import { base } from 'wagmi/chains'
+import { base } from 'wagmi/chains'
 import { sdk } from '@farcaster/frame-sdk'
 
 export const frameConnector = () => ({
