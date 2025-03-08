@@ -11,7 +11,7 @@ import {
   CardContent,
 } from "~/components/ui/card";
 
-import { config } from "wagmi-config"; 
+import { config } from "~/wagmi.config"; 
 import type { LinkData } from "~/lib/constants";
 import { truncateAddress } from "~/lib/truncateAddress";
 import { base, optimism } from "wagmi/chains";
