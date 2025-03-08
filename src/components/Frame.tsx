@@ -3,7 +3,6 @@
 import { useEffect, useCallback, useState } from "react";
 import sdk, {
   AddFrame,
-  SignIn as SignInCore,
   type Context,
 } from "@farcaster/frame-sdk";
 import {
@@ -14,7 +13,7 @@ import {
   CardContent,
 } from "~/components/ui/card";
 
-import { config } from "~/components/providers/WagmiProvider";
+import { config } from "wagmi";
 import { truncateAddress } from "~/lib/truncateAddress";
 import { base, optimism } from "wagmi/chains";
 import { useSession } from "next-auth/react";
