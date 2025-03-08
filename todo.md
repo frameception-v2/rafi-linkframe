@@ -8,7 +8,7 @@ Here's a focused 20-task checklist following the implementation sequence:
 **Data Layer**
 - [x] Implement React Query hooks in `/lib/data.ts` with Zod validation
 - [x] Add localStorage integration for pinned links persistence
-- [ ] Set up IndexedDB database for recent links caching
+- [x] Set up IndexedDB database for recent links caching
 - [ ] Create sessionStorage manager for view state tracking
 
 **Rendering System**
