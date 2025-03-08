@@ -1,11 +1,10 @@
-import { createConfig, http } from "wagmi";
-import { base } from "wagmi/chains";
-import { frameConnector } from "./lib/connector";
+import { createConfig } from 'wagmi'
+import { base } from 'wagmi/chains'
+import { http } from 'viem'
 
 export const config = createConfig({
   chains: [base],
-  connectors: [frameConnector()],
   transports: {
     [base.id]: http(),
   },
-});
+})

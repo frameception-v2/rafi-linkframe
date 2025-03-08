@@ -139,8 +139,12 @@ export default function Frame() {
       sdk.actions.ready({
         frameImage: `${process.env.NEXT_PUBLIC_BASE_URL}/og.png`,
         postUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/frame`,
-        buttons: [{ label: 'Get started' }],
-        state: { timestamp: Date.now() }
+        buttons: [{ 
+          label: 'Get started',
+          action: 'post'
+        }],
+        state: { timestamp: Date.now() },
+        aspectRatio: '1.91:1'
       });
 
       // Set up a MIPD Store, and request Providers.
@@ -215,7 +219,14 @@ export default function Frame() {
     }
   }, [viewState]);
 
-  const setInputElement = useUnifiedInput(handlePointer);
+  const inputRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    if (inputRef.current) {
+      const handler = new UnifiedInputHandler(inputRef.current, handlePointer);
+      return () => handler.destroy();
+    }
+  }, [handlePointer]);
 
   if (!isSDKLoaded) {
     return <div>Loading...</div>;
@@ -237,7 +248,7 @@ export default function Frame() {
         touchAction: 'pan-y' // Allow vertical scroll but prevent horizontal browser scroll
       }}
       className="p-[2vmin]"
-      ref={setInputElement}
+      ref={inputRef}
     >
       <main 
         className="flex flex-col gap-[2vmin] w-full relative overflow-hidden"
