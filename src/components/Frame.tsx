@@ -148,12 +148,15 @@ export default function Frame() {
         minHeight: '100vh',
         display: 'grid',
         gridTemplateRows: 'auto 1fr auto',
+        // Mobile-first fluid grid
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
+        gap: '1vmax',
       }}
-      className="grid-cols-[minmax(0,1fr)] lg:grid-cols-[repeat(2,minmax(0,1fr))] gap-4 p-4"
+      className="p-[2vmin]"
     >
-      <main className="grid gap-4 content-start w-full max-w-[100vw]">
-        <div className="grid gap-4 w-full">
-          <LinkList 
+      <main className="flex flex-col gap-[2vmin] w-full">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-[2vmin]">
+          <LinkList
             pinnedLinks={[]} // TODO: Connect to real data
             recentLinks={[]} // TODO: Connect to real data
           />
