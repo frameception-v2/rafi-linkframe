@@ -141,16 +141,16 @@ export class UnifiedInputHandler {
 }
 
 export function useUnifiedInput(handler: InputHandler) {
-  const inputRef = useRef<UnifiedInputHandler>()
+  const elementRef = useRef<HTMLElement | null>(null);
+  
+  useEffect(() => {
+    if (!elementRef.current) return;
+    
+    const inputHandler = new UnifiedInputHandler(elementRef.current, handler);
+    return () => inputHandler.destroy();
+  }, [handler]);
 
-  const setElement = useCallback((element: HTMLElement | null) => {
-    if (element) {
-      inputRef.current = new UnifiedInputHandler(element, handler)
-    }
-    return () => {
-      inputRef.current?.destroy()
-    }
-  }, [handler])
-
-  return setElement
+  return (element: HTMLElement | null) => {
+    elementRef.current = element;
+  };
 }

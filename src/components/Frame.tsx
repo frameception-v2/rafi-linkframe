@@ -46,7 +46,8 @@ export default function Frame() {
   const [viewState, setViewState] = useState<ViewState>({
     currentView: 'main',
     lastInteraction: Date.now(),
-    transitionDirection: 'forward'
+    transitionDirection: 'forward',
+    previousView: undefined
   });
 
   const [added, setAdded] = useState(false);
@@ -191,8 +192,7 @@ export default function Frame() {
         touchAction: 'pan-y' // Allow vertical scroll but prevent horizontal browser scroll
       }}
       className="p-[2vmin]"
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
+      ref={setInputElement}
     >
       <main className="flex flex-col gap-[2vmin] w-full">
         <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-[2vmin]">
