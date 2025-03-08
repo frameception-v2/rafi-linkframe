@@ -58,12 +58,21 @@ export default function Frame() {
   }
 
   // View state management
-  const [viewState, setViewState] = useState<ViewState>({
-    currentView: 'main',
-    lastInteraction: Date.now(),
-    transitionDirection: 'forward',
-    previousView: undefined
-  } as ViewState);
+  const [viewState, setViewState] = useState<ViewState>(() => {
+    // Rehydrate from sessionStorage on initial load
+    const savedState = typeof window !== 'undefined' 
+      ? sessionStorage.getItem('frameViewState')
+      : null;
+      
+    return savedState 
+      ? JSON.parse(savedState) 
+      : {
+          currentView: 'main',
+          lastInteraction: Date.now(),
+          transitionDirection: 'forward',
+          previousView: undefined
+        } as ViewState;
+  });
 
   const [added, setAdded] = useState(false);
 
@@ -198,6 +207,13 @@ export default function Frame() {
       setSwipeProgress({ direction: null, progress: 0 });
     }
   }, [touchStart]);
+
+  // Persist view state changes to sessionStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('frameViewState', JSON.stringify(viewState));
+    }
+  }, [viewState]);
 
   const setInputElement = useUnifiedInput(handlePointer);
 

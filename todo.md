@@ -26,7 +26,7 @@ Here's a focused 20-task checklist following the implementation sequence:
 **Storage Integration**
 - [x] Wire React Query cache to localStorage sync
 - [x] Add IndexedDB cleanup scheduler for expired links
-- [ ] Implement sessionStorage rehydration on mount
+- [x] Implement sessionStorage rehydration on mount
 
 **Farcaster Integration**
 - [ ] Set up Wagmi Ethereum config in `/lib/farcaster.ts`
