@@ -60,20 +60,19 @@ export default function Frame() {
 
   // View state management
   const [viewState, setViewState] = useState<ViewState>(() => {
-    // @ts-ignore - Temporary ignore while we fix the type
     // Rehydrate from sessionStorage on initial load
     const savedState = typeof window !== 'undefined' 
       ? sessionStorage.getItem('frameViewState')
       : null;
       
     return savedState 
-      ? JSON.parse(savedState) 
+      ? JSON.parse(savedState) as ViewState
       : {
           currentView: 'main',
           lastInteraction: Date.now(),
           transitionDirection: 'forward',
           previousView: undefined
-        } as ViewState;
+        } satisfies ViewState;
   });
 
   const [added, setAdded] = useState(false);
@@ -346,7 +345,7 @@ export default function Frame() {
               <div className="text-sm text-red-600">
                 Error: {signResult.error} (Retries left: {3 - (signResult.retryCount || 0)})
               </div>
-              {signResult.retryCount < 3 && (
+              {signResult.retryCount! < 3 && (
                 <PurpleButton 
                   onClick={handleSignMessage}
                   className="mt-2"
