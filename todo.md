@@ -29,7 +29,7 @@ Here's a focused 20-task checklist following the implementation sequence:
 - [x] Implement sessionStorage rehydration on mount
 
 **Farcaster Integration**
-- [ ] Set up Wagmi Ethereum config in `/lib/farcaster.ts`
+- [x] Set up Wagmi Ethereum config in `/lib/farcaster.ts`
 - [ ] Add signed message validation with frame payload parsing
 - [ ] Implement error recovery system for failed casts
 

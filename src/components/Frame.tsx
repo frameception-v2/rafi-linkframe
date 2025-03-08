@@ -13,8 +13,7 @@ import {
   CardContent,
 } from "~/components/ui/card";
 
-import { config } from "~/wagmi.config";
-import { base } from "wagmi/chains";
+import { config } from "~/lib/farcaster";
 import type { LinkData, ViewState } from "~/lib/constants";
 import { usePinnedLinks, useRecentLinks } from "~/lib/data";
 import { truncateAddress } from "~/lib/truncateAddress";
