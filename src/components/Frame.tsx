@@ -15,6 +15,7 @@ import {
 import { config } from "~/wagmi.config";
 import { base } from "wagmi/chains";
 import type { LinkData, ViewState } from "~/lib/constants";
+import { usePinnedLinks, useRecentLinks } from "~/lib/data";
 import { truncateAddress } from "~/lib/truncateAddress";
 import { createStore } from "mipd";
 import { Label } from "~/components/ui/label";
@@ -45,6 +46,15 @@ export default function Frame() {
     direction: null,
     progress: 0
   });
+
+  // Data queries
+  const { data: pinnedLinks = [], isLoading: isPinnedLoading } = usePinnedLinks();
+  const { data: recentLinks = [], isLoading: isRecentLoading } = useRecentLinks();
+
+  // Show loading state
+  if (isPinnedLoading || isRecentLoading) {
+    return <div>Loading links...</div>;
+  }
 
   // View state management
   const [viewState, setViewState] = useState<ViewState>({
