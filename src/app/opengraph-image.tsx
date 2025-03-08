@@ -1,4 +1,4 @@
-import { ImageResponse } from "next/og";
+import { ImageResponse } from "next/server";
 import { PROJECT_TITLE, PROJECT_DESCRIPTION } from "~/lib/constants";
 import { readFileSync } from "fs";
 import { join } from "path";
@@ -77,7 +77,7 @@ export default async function Image() {
     color: "white",
   };
 
-  {/*
+  {/* 
   This Image is rendered using vercel/satori.
 
 Satori supports a limited subset of HTML and CSS features, due to its special use cases. In general, only these static and visible elements and properties that are implemented.
