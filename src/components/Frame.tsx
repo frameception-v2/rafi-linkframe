@@ -40,7 +40,10 @@ function ExampleCard() {
 export default function Frame() {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
   const [context, setContext] = useState<FrameContext>();
-  // TODO: Implement proper session state management
+  const [touchStart, setTouchStart] = useState({ x: 0, y: 0, time: 0 });
+  const [swipeDirection, setSwipeDirection] = useState<'left'|'right'|null>(null);
+  
+  // View state management
   const [viewState, setViewState] = useState({
     currentView: 'main',
     lastInteraction: Date.now(),
@@ -134,6 +137,40 @@ export default function Frame() {
     }
   }, [isSDKLoaded, addFrame, setViewState]);
 
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    setTouchStart({
+      x: touch.clientX,
+      y: touch.clientY,
+      time: Date.now()
+    });
+  }, []);
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    const touch = e.changedTouches[0];
+    const deltaX = touch.clientX - touchStart.x;
+    const deltaY = touch.clientY - touchStart.y;
+    const timeDelta = Date.now() - touchStart.time;
+    
+    // Only consider horizontal swipes
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      const velocity = Math.abs(deltaX) / timeDelta;
+      
+      // Velocity threshold (0.5px/ms = 500px/s)
+      if (velocity > 0.5) {
+        const direction = deltaX > 0 ? 'right' : 'left';
+        setSwipeDirection(direction);
+        
+        // Update view state based on swipe direction
+        setViewState(prev => ({
+          currentView: prev.currentView === 'main' ? 'recent' : 'main',
+          lastInteraction: Date.now(),
+          transitionDirection: direction === 'left' ? 'forward' : 'back'
+        }));
+      }
+    }
+  }, [touchStart]);
+
   if (!isSDKLoaded) {
     return <div>Loading...</div>;
   }
@@ -151,8 +188,11 @@ export default function Frame() {
         // Mobile-first fluid grid
         gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
         gap: '1vmax',
+        touchAction: 'pan-y' // Allow vertical scroll but prevent horizontal browser scroll
       }}
       className="p-[2vmin]"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       <main className="flex flex-col gap-[2vmin] w-full">
         <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-[2vmin]">
