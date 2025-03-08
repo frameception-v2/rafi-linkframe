@@ -87,6 +87,7 @@ export default function Frame() {
   const [isSigning, setIsSigning] = useState(false);
 
   const { isConnected, address } = useAccount();
+  const { connect } = useConnect();
   
   const handleSignMessage = useCallback(async () => {
     if (!isConnected) {
@@ -126,7 +127,7 @@ export default function Frame() {
     } finally {
       setIsSigning(false);
     }
-  }, []);
+  }, [isConnected, address, connect]);
 
   const addFrame = useCallback(async () => {
     try {
