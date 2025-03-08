@@ -1,11 +1,11 @@
 import { useEffect, useCallback, useRef } from 'react'
 
-type PointerEvent = {
+export type PointerEvent = {
   type: 'start' | 'move' | 'end' | 'cancel'
   x: number
   y: number
   time: number
-  pointerType: 'touch' | 'mouse'
+  pointerType: 'touch' | 'mouse' 
   velocity?: { x: number; y: number }
 }
 
@@ -146,13 +146,22 @@ export class UnifiedInputHandler {
 
 export function useUnifiedInput(handler: InputHandler) {
   const elementRef = useRef<HTMLElement | null>(null);
+  const handlerRef = useRef(handler);
   
   useEffect(() => {
-    if (!elementRef.current) return;
-    
-    const inputHandler = new UnifiedInputHandler(elementRef.current, handler);
-    return () => inputHandler.destroy();
+    handlerRef.current = handler;
   }, [handler]);
+
+  useEffect(() => {
+    const element = elementRef.current;
+    if (!element) return;
+    
+    const inputHandler = new UnifiedInputHandler(element, (event) => {
+      handlerRef.current(event);
+    });
+    
+    return () => inputHandler.destroy();
+  }, []);
 
   return (element: HTMLElement | null) => {
     elementRef.current = element;
