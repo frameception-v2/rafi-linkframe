@@ -79,7 +79,11 @@ export default function Frame() {
   const [added, setAdded] = useState(false);
 
   const [addFrameResult, setAddFrameResult] = useState("");
-  const [signResult, setSignResult] = useState<{ hash?: string, error?: string }>({});
+  const [signResult, setSignResult] = useState<{ 
+    hash?: string, 
+    error?: string,
+    retryCount?: number 
+  }>({});
   const [isSigning, setIsSigning] = useState(false);
 
   const handleSignMessage = useCallback(async () => {
@@ -108,7 +112,10 @@ export default function Frame() {
         );
       }
     } catch (error) {
-      setSignResult({ error: error instanceof Error ? error.message : 'Signing failed' });
+      setSignResult(prev => ({
+        error: error instanceof Error ? error.message : 'Signing failed',
+        retryCount: (prev.retryCount || 0) + 1
+      }));
     } finally {
       setIsSigning(false);
     }
@@ -337,8 +344,16 @@ export default function Frame() {
             
             {signResult.error && (
               <div className="text-sm text-red-600">
-                Error: {signResult.error}
+                Error: {signResult.error} (Retries left: {3 - (signResult.retryCount || 0)})
               </div>
+              {signResult.retryCount < 3 && (
+                <PurpleButton 
+                  onClick={handleSignMessage}
+                  className="mt-2"
+                >
+                  Retry Now
+                </PurpleButton>
+              )}
             )}
           </div>
         </div>
