@@ -10,6 +10,9 @@ type PointerEvent = {
 
 type InputHandler = (event: PointerEvent) => void
 
+const LONG_PRESS_DURATION = 500; // ms
+const MOVE_TOLERANCE = 10; // pixels
+
 export class UnifiedInputHandler {
   private element: HTMLElement
   private handler: InputHandler
@@ -17,6 +20,7 @@ export class UnifiedInputHandler {
   private startX = 0
   private startY = 0
   private startTime = 0
+  private isLongPress = false
 
   constructor(element: HTMLElement, handler: InputHandler) {
     this.element = element
@@ -52,18 +56,16 @@ export class UnifiedInputHandler {
     })
 
     // Start long press detection
-    this.longPressTimeout = setTimeout(() => {
-      this.handler({
-        type: 'end',
-        x,
-        y,
-        time: Date.now(),
-        pointerType: 'touch' // Long press is primarily touch interaction
-      })
-    }, 500)
+    this.longPressTimeout = setTimeout(this.handleLongPress, LONG_PRESS_DURATION)
   }
 
   private handlePointerMove(x: number, y: number, pointerType: 'touch' | 'mouse') {
+    // Cancel long press if moved beyond tolerance
+    if (Math.abs(x - this.startX) > MOVE_TOLERANCE || 
+        Math.abs(y - this.startY) > MOVE_TOLERANCE) {
+      clearTimeout(this.longPressTimeout)
+    }
+    
     this.handler({
       type: 'move',
       x,
@@ -79,6 +81,7 @@ export class UnifiedInputHandler {
     }
 
     const currentTime = Date.now()
+    this.isLongPress = false
     const velocity = {
       x: (x - this.startX) / (currentTime - this.startTime),
       y: (y - this.startY) / (currentTime - this.startTime)
