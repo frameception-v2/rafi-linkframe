@@ -1,12 +1,9 @@
 import { createConfig, http } from "wagmi";
-import { base, optimism } from "wagmi/chains";
-import { frameConnector } from "~/lib/connector";
+import { base } from "wagmi/chains";
 
 export const config = createConfig({
-  chains: [base, optimism],
-  connectors: [frameConnector()],
+  chains: [base],
   transports: {
     [base.id]: http(),
-    [optimism.id]: http(),
   },
 });

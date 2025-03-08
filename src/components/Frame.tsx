@@ -14,7 +14,7 @@ import {
 import { config } from "~/wagmi.config"; 
 import type { LinkData } from "~/lib/constants";
 import { truncateAddress } from "~/lib/truncateAddress";
-import { base, optimism } from "wagmi/chains";
+import { base } from "wagmi/chains";
 import { useSession } from "next-auth/react";
 import { createStore } from "mipd";
 import { Label } from "~/components/ui/label";
