@@ -35,7 +35,7 @@ Here's a focused 20-task checklist following the implementation sequence:
 
 **Final Assembly**
 - [x] Compose all providers in page.tsx root component
-- [ ] Connect Farcaster wallet state to UI actions
+- [x] Connect Farcaster wallet state to UI actions
 - [ ] Run final accessibility audit with screen reader tests
 
 Each task represents about 1-2 hours of focused work and produces testable output. The sequence maintains dependency order while allowing parallel work on isolated systems (e.g., data layer vs rendering). Complete foundation tasks first before moving to interaction layers.

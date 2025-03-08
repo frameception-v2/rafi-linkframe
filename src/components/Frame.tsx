@@ -13,6 +13,7 @@ import {
   CardContent,
 } from "~/components/ui/card";
 
+import { useAccount } from "wagmi";
 import { config } from "~/lib/farcaster";
 import type { LinkData, ViewState } from "~/lib/constants";
 import { usePinnedLinks, useRecentLinks } from "~/lib/data";
@@ -85,7 +86,14 @@ export default function Frame() {
   }>({});
   const [isSigning, setIsSigning] = useState(false);
 
+  const { isConnected, address } = useAccount();
+  
   const handleSignMessage = useCallback(async () => {
+    if (!isConnected) {
+      setSignResult({ error: "Wallet not connected" });
+      return;
+    }
+    
     setIsSigning(true);
     try {
       const result = await sdk.actions.signMessage({
@@ -328,11 +336,11 @@ export default function Frame() {
         {/* Message signing section */}
         <div className="mt-8 p-4 border-t border-neutral-200">
           <div className="flex flex-col gap-2">
-            <PurpleButton 
-              onClick={handleSignMessage}
-              disabled={isSigning}
+            <PurpleButton
+              onClick={isConnected ? handleSignMessage : () => connect({ connector: config.connectors[0] })}
+              disabled={!isConnected || isSigning}
             >
-              {isSigning ? 'Signing...' : 'Sign Frame Message'}
+              {isSigning ? 'Signing...' : isConnected ? `Sign as ${truncateAddress(address!)}` : 'Connect Wallet to Sign'}
             </PurpleButton>
             
             {signResult.hash && (
@@ -343,7 +351,9 @@ export default function Frame() {
             
             {signResult.error && (
               <div className="text-sm text-red-600">
-                Error: {signResult.error} (Retries left: {3 - (signResult.retryCount || 0)})
+                {signResult.error === "Wallet not connected" 
+                  ? "Connect your wallet to sign messages"
+                  : `Error: ${signResult.error} (Retries left: ${3 - (signResult.retryCount || 0)})`}
               </div>
               {signResult.retryCount! < 3 && (
                 <PurpleButton 
