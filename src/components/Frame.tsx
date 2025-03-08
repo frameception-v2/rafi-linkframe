@@ -137,39 +137,39 @@ export default function Frame() {
     }
   }, [isSDKLoaded, addFrame, setViewState]);
 
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    const touch = e.touches[0];
-    setTouchStart({
-      x: touch.clientX,
-      y: touch.clientY,
-      time: Date.now()
-    });
-  }, []);
-
-  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
-    const touch = e.changedTouches[0];
-    const deltaX = touch.clientX - touchStart.x;
-    const deltaY = touch.clientY - touchStart.y;
-    const timeDelta = Date.now() - touchStart.time;
-    
-    // Only consider horizontal swipes
-    if (Math.abs(deltaX) > Math.abs(deltaY)) {
-      const velocity = Math.abs(deltaX) / timeDelta;
+  const handlePointer = useCallback((event: PointerEvent) => {
+    if (event.type === 'start') {
+      setTouchStart({
+        x: event.x,
+        y: event.y,
+        time: event.time
+      });
+    } else if (event.type === 'end') {
+      const deltaX = event.x - touchStart.x;
+      const deltaY = event.y - touchStart.y;
+      const timeDelta = event.time - touchStart.time;
       
-      // Velocity threshold (0.5px/ms = 500px/s)
-      if (velocity > 0.5) {
-        const direction = deltaX > 0 ? 'right' : 'left';
-        setSwipeDirection(direction);
+      // Only consider horizontal swipes
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        const velocity = Math.abs(deltaX) / timeDelta;
         
-        // Update view state based on swipe direction
-        setViewState(prev => ({
-          currentView: prev.currentView === 'main' ? 'recent' : 'main',
-          lastInteraction: Date.now(),
-          transitionDirection: direction === 'left' ? 'forward' : 'back'
-        }));
+        // Velocity threshold (0.5px/ms = 500px/s)
+        if (velocity > 0.5) {
+          const direction = deltaX > 0 ? 'right' : 'left';
+          setSwipeDirection(direction);
+          
+          // Update view state based on swipe direction
+          setViewState(prev => ({
+            currentView: prev.currentView === 'main' ? 'recent' : 'main',
+            lastInteraction: event.time,
+            transitionDirection: direction === 'left' ? 'forward' : 'back'
+          }));
+        }
       }
     }
   }, [touchStart]);
+
+  const setInputElement = useUnifiedInput(handlePointer);
 
   if (!isSDKLoaded) {
     return <div>Loading...</div>;
