@@ -18,6 +18,7 @@ import { base, optimism } from "wagmi/chains";
 import { useSession } from "next-auth/react";
 import { createStore } from "mipd";
 import { Label } from "~/components/ui/label";
+import LinkList from "~/components/LinkList";
 import { PROJECT_TITLE } from "~/lib/constants";
 
 function ExampleCard() {
@@ -150,8 +151,11 @@ export default function Frame() {
       className="grid-cols-[minmax(0,1fr)] lg:grid-cols-[repeat(2,minmax(0,1fr))] gap-4 p-4"
     >
       <main className="grid gap-4 content-start w-full max-w-[100vw]">
-        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
-          <ExampleCard />
+        <div className="grid gap-4 w-full">
+          <LinkList 
+            pinnedLinks={[]} // TODO: Connect to real data
+            recentLinks={[]} // TODO: Connect to real data
+          />
         </div>
       </main>
     </div>
