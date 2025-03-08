@@ -6,6 +6,7 @@ type PointerEvent = {
   y: number
   time: number
   pointerType: 'touch' | 'mouse'
+  velocity?: { x: number; y: number }
 }
 
 type InputHandler = (event: PointerEvent) => void
@@ -93,7 +94,7 @@ export class UnifiedInputHandler {
       y,
       time: currentTime,
       pointerType,
-      velocity
+      velocity // Now matches updated type definition
     })
   }
 

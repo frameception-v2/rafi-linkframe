@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback, useState, useRef } from "react";
+import { useUnifiedInput } from "~/lib/input";
 import sdk from "@farcaster/frame-sdk";
 import type { FrameContext } from "@farcaster/frame-sdk";
 import {
@@ -48,7 +49,7 @@ export default function Frame() {
     lastInteraction: Date.now(),
     transitionDirection: 'forward',
     previousView: undefined
-  });
+  } as ViewState);
 
   const [added, setAdded] = useState(false);
 
