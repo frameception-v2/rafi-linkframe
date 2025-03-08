@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback, useState, useReducer } from "react";
 import sdk from "@farcaster/frame-sdk";
 import type { FrameContext } from "@farcaster/frame-sdk";
 import {
@@ -40,10 +40,11 @@ function ExampleCard() {
 export default function Frame() {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
   const [context, setContext] = useState<FrameContext>();
-  const [viewState, setViewState] = useSessionState({
+  // TODO: Implement proper session state management
+  const [viewState, setViewState] = useState({
     currentView: 'main',
     lastInteraction: Date.now(),
-  });
+  } as const);
 
   const [added, setAdded] = useState(false);
 
@@ -131,7 +132,7 @@ export default function Frame() {
         sdk.removeAllListeners();
       };
     }
-  }, [isSDKLoaded, addFrame]);
+  }, [isSDKLoaded, addFrame, setViewState]);
 
   if (!isSDKLoaded) {
     return <div>Loading...</div>;
