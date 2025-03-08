@@ -20,6 +20,7 @@ import { truncateAddress } from "~/lib/truncateAddress";
 import { createStore } from "mipd";
 import { UnifiedInputHandler } from "~/lib/input";
 import { Label } from "~/components/ui/label";
+import { PurpleButton } from "~/components/ui/PurpleButton";
 import LinkList from "~/components/LinkList";
 import { PROJECT_TITLE } from "~/lib/constants";
 
@@ -78,6 +79,40 @@ export default function Frame() {
   const [added, setAdded] = useState(false);
 
   const [addFrameResult, setAddFrameResult] = useState("");
+  const [signResult, setSignResult] = useState<{ hash?: string, error?: string }>({});
+  const [isSigning, setIsSigning] = useState(false);
+
+  const handleSignMessage = useCallback(async () => {
+    setIsSigning(true);
+    try {
+      const result = await sdk.actions.signMessage({
+        message: {
+          type: 'frame',
+          frameUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/frame`,
+          postUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/frame`,
+          state: { timestamp: Date.now() }
+        }
+      });
+      
+      // Validate signature
+      if (result?.signature) {
+        const isValid = await sdk.validateSignature({
+          message: result.message,
+          signature: result.signature,
+          publicKey: result.publicKey
+        });
+        
+        setSignResult(isValid ? 
+          { hash: `${result.signature.slice(0, 8)}...${result.signature.slice(-8)}` } : 
+          { error: 'Invalid signature' }
+        );
+      }
+    } catch (error) {
+      setSignResult({ error: error instanceof Error ? error.message : 'Signing failed' });
+    } finally {
+      setIsSigning(false);
+    }
+  }, []);
 
   const addFrame = useCallback(async () => {
     try {
@@ -282,6 +317,30 @@ export default function Frame() {
             onSwipeRight={() => setViewState(prev => ({...prev, currentView: 'main'}))}
             aria-labelledby="link-list-label"
           />
+        </div>
+
+        {/* Message signing section */}
+        <div className="mt-8 p-4 border-t border-neutral-200">
+          <div className="flex flex-col gap-2">
+            <PurpleButton 
+              onClick={handleSignMessage}
+              disabled={isSigning}
+            >
+              {isSigning ? 'Signing...' : 'Sign Frame Message'}
+            </PurpleButton>
+            
+            {signResult.hash && (
+              <div className="text-sm text-green-600">
+                Valid signature: {signResult.hash}
+              </div>
+            )}
+            
+            {signResult.error && (
+              <div className="text-sm text-red-600">
+                Error: {signResult.error}
+              </div>
+            )}
+          </div>
         </div>
       </main>
     </div>

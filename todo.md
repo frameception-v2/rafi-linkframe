@@ -30,7 +30,7 @@ Here's a focused 20-task checklist following the implementation sequence:
 
 **Farcaster Integration**
 - [x] Set up Wagmi Ethereum config in `/lib/farcaster.ts`
-- [ ] Add signed message validation with frame payload parsing
+- [x] Add signed message validation with frame payload parsing
 - [ ] Implement error recovery system for failed casts
 
 **Final Assembly**
