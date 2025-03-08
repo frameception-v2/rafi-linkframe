@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useCallback, useState, useRef } from "react";
-import { useUnifiedInput, type CustomPointerEvent } from "~/lib/input";
+import { useUnifiedInput } from "~/lib/input";
+import type { PointerEvent } from "~/lib/input";
 import sdk from "@farcaster/frame-sdk";
 import type { FrameContext } from "@farcaster/frame-sdk";
 import {
@@ -247,10 +248,11 @@ export default function Frame() {
         </div>
         <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-[2vmin]">
           <LinkList
-            pinnedLinks={[]}
-            recentLinks={[]}
-            onSwipeLeft={() => {}}
-            onSwipeRight={() => {}}
+            pinnedLinks={pinnedLinks}
+            recentLinks={recentLinks}
+            onSwipeLeft={() => setViewState(prev => ({...prev, currentView: 'recent'}))}
+            onSwipeRight={() => setViewState(prev => ({...prev, currentView: 'main'}))}
+            aria-labelledby="link-list-label"
           />
         </div>
       </main>
