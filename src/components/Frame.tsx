@@ -14,9 +14,8 @@ import {
 
 import { config } from "~/wagmi.config";
 import { base } from "wagmi/chains";
-import type { LinkData } from "~/lib/constants";
+import type { LinkData, ViewState } from "~/lib/constants";
 import { truncateAddress } from "~/lib/truncateAddress";
-import { base } from "wagmi/chains";
 import { createStore } from "mipd";
 import { Label } from "~/components/ui/label";
 import LinkList from "~/components/LinkList";
@@ -176,9 +175,11 @@ export default function Frame() {
           
           // Update view state based on swipe direction
           setViewState(prev => ({
+            ...prev,
             currentView: prev.currentView === 'main' ? 'recent' : 'main',
             lastInteraction: event.time,
-            transitionDirection: direction === 'left' ? 'forward' : 'back'
+            transitionDirection: direction === 'left' ? 'forward' : 'back',
+            previousView: prev.currentView
           }));
         }
       }
