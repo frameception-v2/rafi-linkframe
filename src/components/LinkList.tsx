@@ -8,6 +8,8 @@ interface LinkListProps {
   pinnedLinks: LinkData[];
   recentLinks: LinkData[];
   'aria-labelledby'?: string;
+  onSwipeLeft?: () => void;
+  onSwipeRight?: () => void;
 }
 
 export default function LinkList({ pinnedLinks, recentLinks }: LinkListProps) {

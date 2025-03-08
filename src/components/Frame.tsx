@@ -15,7 +15,6 @@ import { config } from "~/wagmi.config";
 import type { LinkData } from "~/lib/constants";
 import { truncateAddress } from "~/lib/truncateAddress";
 import { base } from "wagmi/chains";
-import { useSession } from "next-auth/react";
 import { createStore } from "mipd";
 import { Label } from "~/components/ui/label";
 import LinkList from "~/components/LinkList";
@@ -44,10 +43,11 @@ export default function Frame() {
   const [swipeDirection, setSwipeDirection] = useState<'left'|'right'|null>(null);
   
   // View state management
-  const [viewState, setViewState] = useState({
+  const [viewState, setViewState] = useState<ViewState>({
     currentView: 'main',
     lastInteraction: Date.now(),
-  } as const);
+    transitionDirection: 'forward'
+  });
 
   const [added, setAdded] = useState(false);
 
