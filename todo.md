@@ -24,7 +24,7 @@ Here's a focused 20-task checklist following the implementation sequence:
 - [x] Create swipe progress indicators with CSS transforms
 
 **Storage Integration**
-- [ ] Wire React Query cache to localStorage sync
+- [x] Wire React Query cache to localStorage sync
 - [ ] Add IndexedDB cleanup scheduler for expired links
 - [ ] Implement sessionStorage rehydration on mount
 
