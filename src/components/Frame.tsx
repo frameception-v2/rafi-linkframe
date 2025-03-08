@@ -39,6 +39,10 @@ function ExampleCard() {
 export default function Frame() {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
   const [context, setContext] = useState<FrameContext>();
+  const [viewState, setViewState] = useSessionState({
+    currentView: 'main',
+    lastInteraction: Date.now(),
+  });
 
   const [added, setAdded] = useState(false);
 
@@ -82,6 +86,12 @@ export default function Frame() {
       sdk.on("frameRemoved", () => {
         console.log("frameRemoved");
         setAdded(false);
+        setViewState(prev => ({
+          ...prev,
+          currentView: 'main',
+          transitionDirection: 'back',
+          lastInteraction: Date.now()
+        }));
       });
 
       sdk.on("notificationsEnabled", ({ notificationDetails }) => {
