@@ -8,6 +8,10 @@ import posthog from "posthog-js";
 import { PostHogProvider as PHProvider } from "posthog-js/react";
 import { FrameContext } from "@farcaster/frame-node";
 import sdk from "@farcaster/frame-sdk";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { StorageProvider } from "~/components/StorageProvider";
+
+const queryClient = new QueryClient();
 
 const WagmiProvider = dynamic(
   () => import("~/components/providers/WagmiProvider"),
@@ -89,7 +93,11 @@ export function Providers({
   return (
     <SessionProvider session={session}>
       <WagmiProvider>
-        <PostHogProvider>{children}</PostHogProvider>
+        <QueryClientProvider client={queryClient}>
+          <StorageProvider>
+            <PostHogProvider>{children}</PostHogProvider>
+          </StorageProvider>
+        </QueryClientProvider>
       </WagmiProvider>
     </SessionProvider>
   );
